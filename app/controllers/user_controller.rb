@@ -5,7 +5,9 @@ class UserController < ApplicationController
   end
 
   def load_users
-    @users = User.offset(@page_start).limit(@page_len)
+    @users = User.offset(@page_start)
+                 .limit(@page_len)
+                 .order({ @columns[@order['0']['column']]['data'] =>  @order['0']['dir'] })
 
     render json: {
         draw: @draw,
