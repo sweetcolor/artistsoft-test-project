@@ -5,9 +5,12 @@ class UserController < ApplicationController
   end
 
   def load_users
-    @users = User.offset(@page_start)
+    @users = User.any_of({ first_name: @search },
+                         { address: @search },
+                         { last_name: @search })
+                 .offset(@page_start)
                  .limit(@page_len)
-                 .order({ @columns[@order['0']['column']]['data'] =>  @order['0']['dir'] })
+                 .order({ @columns[@order['0']['column']]['data'] => @order['0']['dir'] })
 
     render json: {
         draw: @draw,
@@ -23,7 +26,7 @@ class UserController < ApplicationController
     @draw = params[:draw]
     @page_start = params[:start]
     @page_len = params[:length]
-    @search = params[:search]
+    @search = Regexp.new("\\w*#{params[:search]['value']}\\w*", Regexp::IGNORECASE)
     @order = params[:order]
     @columns = params[:columns]
   end
