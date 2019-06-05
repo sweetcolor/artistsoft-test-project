@@ -14,3 +14,8 @@
  *= require_directory .
  *= require_self
  */
+
+.wrapper {
+    width: 60%;
+    margin: 20px auto;
+}
